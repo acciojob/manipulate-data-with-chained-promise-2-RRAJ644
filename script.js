@@ -1,28 +1,32 @@
 function getNumbers() {
-    return new Promise((resolve) => {
-        setTimeout(() => {
-            resolve([1, 2, 3, 4]); // Initial array
-        }, 1000); // Matches Cypress timing
-    });
+  // Returns a promise that resolves with an array of numbers
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve([1, 2, 3, 4]);
+    }, );
+  });
 }
 
 getNumbers()
-    .then(numbers => {
-        return new Promise((resolve) => {
-            setTimeout(() => {
-                const evens = numbers.filter(num => num % 2 === 0);
-                document.getElementById("output").textContent = evens.join(", ");
-                resolve(evens);
-            }, 1000); // Cypress expects "2,4" at this point
-        });
-    })
-    .then(evens => {
-        return new Promise((resolve) => {
-            setTimeout(() => {
-                const doubled = evens.map(num => num * 2);
-                document.getElementById("output").textContent = doubled.join(", ");
-                resolve(doubled);
-            }, 2000); // Cypress expects "4,8" here
-        });
-    })
-    .catch(error => console.error("Error:", error));
+  .then((numbers) => {
+    // First promise: filter out odd numbers after 1 second
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        const evenNumbers = numbers.filter((num) => num % 2 === 0);
+        document.getElementById("output").textContent = evenNumbers.join(", ");
+        resolve(evenNumbers);
+      }, 1000); // Delay of 1 second
+    });
+  })
+  .then((evenNumbers) => {
+    // Second promise: multiply even numbers by 2 after 2 seconds
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        const multipliedNumbers = evenNumbers.map((num) => num * 2);
+        document.getElementById("output").textContent =
+          multipliedNumbers.join(", ");
+        resolve(multipliedNumbers);
+      }, 2000); // Delay of 2 seconds
+    });
+  })
+  .catch((err) => console.error(err));
