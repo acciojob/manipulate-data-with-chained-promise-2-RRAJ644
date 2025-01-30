@@ -3,7 +3,7 @@ function manipulateArray(inputArray) {
     return new Promise((resolve) => {
         setTimeout(() => {
             resolve(inputArray);
-        }, 500); // Reduced to 500ms to prevent test failure
+        }, 100); // Reduced to 500ms to prevent test failure
     });
 }
 
