@@ -1,36 +1,28 @@
-// Function to return a promise that resolves with the initial array after 500ms
-function manipulateArray(inputArray) {
+function getNumbers() {
     return new Promise((resolve) => {
         setTimeout(() => {
-            resolve(inputArray);
-        }, 100); // Reduced to 500ms to prevent test failure
+            resolve([1, 2, 3, 4]); // Initial array
+        }, 1000); // Matches Cypress timing
     });
 }
 
-// Function to filter even numbers and update the output div after 1 second
-function filterEvenNumbers(array) {
-    return new Promise((resolve) => {
-        setTimeout(() => {
-            const evens = array.filter(num => num % 2 === 0);
-            document.getElementById("output").innerText = evens.join(", "); // ✅ Update immediately
-            resolve(evens);
-        }, 1000);
-    });
-}
-
-// Function to multiply even numbers by 2 and update the output div after 2 seconds
-function multiplyEvenNumbers(array) {
-    return new Promise((resolve) => {
-        setTimeout(() => {
-            const doubled = array.map(num => num * 2);
-            document.getElementById("output").innerText = doubled.join(", "); // ✅ Update immediately
-            resolve(doubled);
-        }, 2000);
-    });
-}
-
-// Chain promises to manipulate the array and update the output div at each step
-manipulateArray([1, 2, 3, 4])
-    .then(filterEvenNumbers) // First update after 1s (Cypress expects "2,4")
-    .then(multiplyEvenNumbers) // Second update after 2s (Cypress expects "4,8")
+getNumbers()
+    .then(numbers => {
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                const evens = numbers.filter(num => num % 2 === 0);
+                document.getElementById("output").textContent = evens.join(", ");
+                resolve(evens);
+            }, 1000); // Cypress expects "2,4" at this point
+        });
+    })
+    .then(evens => {
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                const doubled = evens.map(num => num * 2);
+                document.getElementById("output").textContent = doubled.join(", ");
+                resolve(doubled);
+            }, 2000); // Cypress expects "4,8" here
+        });
+    })
     .catch(error => console.error("Error:", error));
